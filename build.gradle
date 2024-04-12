@@ -2,6 +2,20 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'com.google.cloud.tools.jib' version '3.4.2'
+}
+
+jib{
+	from {
+		image = 'openjdk:17-jdk-slim'
+	}
+	to {
+		image = 'ifyang/kau_capstone_onda'
+		auth {
+			username = project.findProperty('jibUsername') ?: ''
+			password = project.findProperty('jibPassword') ?: ''
+		}
+	}
 }
 
 group = 'com.capstone'
@@ -19,7 +33,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter'
+
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
+	runtimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
