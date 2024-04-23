@@ -1,4 +1,4 @@
-package com.capstone.onda.controller;
+package com.capstone.onda.sample;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
