@@ -38,10 +38,9 @@ public class SecurityConfig {
                 authorizeRequests.anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .oauth2Login((oauth2) -> oauth2
-                .userInfoEndpoint(c -> c.userService(oauthService))
-                .failureHandler(failureHandler)
-                .successHandler(successHandler));
+            .oauth2Login((oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo
+                    .userService(oauthService))
+                .successHandler(successHandler)));
 
         return http
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
