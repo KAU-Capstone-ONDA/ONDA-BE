@@ -4,7 +4,6 @@ import com.capstone.onda.domain.member.entity.Member;
 import com.capstone.onda.domain.member.repository.MemberRepository;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +31,7 @@ public class OAuthService extends DefaultOAuth2UserService {
         //2. RegistrationId 가져오기 (third-party id - kakao)
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        //3. userNameAttributeName 가져오기 (yml - d)
+        //3. userNameAttributeName 가져오기 (yml - id)
         String userNameAttributeName = userRequest.getClientRegistration()
             .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
