@@ -8,6 +8,8 @@ services:
 
   redis:
     image: redis:latest
+    container_name: redis
+    hostname: redis
     command: redis-server /usr/local/etc/redis-refresh-token/redis.conf --requirepass 0601
     ports:
       - "6379:6379"
