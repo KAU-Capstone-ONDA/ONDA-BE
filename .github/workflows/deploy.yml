@@ -30,6 +30,7 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" | base64 --decode > src/main/resources/application.yml
           echo "${{ secrets.PROD_PROPERTIES }}" | base64 --decode > src/main/resources/application-prod.yml
           echo "${{ secrets.TEST_PROPERTIES }}" | base64 --decode > src/test/resources/application.yml
+          echo "${{ secrets.DOCKER_COMPOSE }}" | base64 --decode > docker-compose.yml
 
       - name: Grant execute permission for gradlew
         run: |
@@ -59,5 +60,6 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa) 
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:develop
-            docker run -d --name onda -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:develop
+            sudo docker compose down
+            sudo docker compose up -d
             sudo docker image prune -f
