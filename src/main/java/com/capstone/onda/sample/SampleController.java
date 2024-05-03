@@ -8,6 +8,11 @@ public class SampleController {
 
     @RequestMapping("/sample")
     public String docker() {
-        return "onda sample";
+        return "login fail";
+    }
+
+    @RequestMapping("/sample2")
+    public String sample() {
+        return "login success";
     }
 }
