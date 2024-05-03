@@ -59,5 +59,6 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa) 
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:develop
-            docker run -d --name onda -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:develop
+            sudo docker compose down
+            sudo docker compose up -d
             sudo docker image prune -f
