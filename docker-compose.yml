@@ -11,6 +11,9 @@ services:
     depends_on:
       - redis
     restart: "always"
+    networks:
+      - onda-network
+
 
   redis:
     image: redis:latest
@@ -23,3 +26,9 @@ services:
       - ./data/refresh-token-data:/data
       - ./data/refresh-token-data/redis.conf:/usr/local/etc/redis-refresh-token/redis.conf
     restart: "always"
+    networks:
+      - onda-network
+
+networks:
+  onda-network:
+    driver: bridge
