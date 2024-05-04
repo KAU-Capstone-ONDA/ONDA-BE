@@ -4,6 +4,12 @@ services:
     image: "ifyang/kau_capstone_onda:develop"
     ports:
       - "80:8080"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: 0601
+    depends_on:
+      - redis
     restart: "always"
 
   redis:
@@ -16,3 +22,4 @@ services:
     volumes:
       - ./data/refresh-token-data:/data
       - ./data/refresh-token-data/redis.conf:/usr/local/etc/redis-refresh-token/redis.conf
+    restart: "always"
