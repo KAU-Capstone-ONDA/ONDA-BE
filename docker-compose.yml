@@ -7,25 +7,19 @@ services:
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: 0601
+      REDIS_PASSWORD: "0601"
     depends_on:
       - redis
     restart: "always"
     networks:
       - onda-network
 
-
   redis:
     image: redis:latest
     container_name: redis
     hostname: redis
-    command: redis-server /usr/local/etc/redis-refresh-token/redis.conf --requirepass 0601
     ports:
       - "6379:6379"
-    volumes:
-      - ./data/refresh-token-data:/data
-      - ./data/refresh-token-data/redis.conf:/usr/local/etc/redis-refresh-token/redis.conf
-    restart: "always"
     networks:
       - onda-network
 
