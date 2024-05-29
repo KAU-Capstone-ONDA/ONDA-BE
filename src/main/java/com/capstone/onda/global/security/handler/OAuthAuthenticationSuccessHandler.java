@@ -21,7 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
-    private static final String URI = "http://localhost:3000/kakaoLogin";
+    private static final String KAKAO_URI = "http://localhost:3000/kakaoLogin";
+    private static final String NAVER_URI = "http://localhost:3000/naverLogin";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -33,6 +34,8 @@ public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         //2. oAuth2User의 정보들을 가져온다.
         String email = oAuth2User.getAttribute("email");
 
+        String provider = oAuth2User.getAttribute("provider");
+
         //3. 로그인한 회원 존재의 여부를 가져온다.
         String role = oAuth2User.getAuthorities().stream()
             .findFirst()
@@ -42,13 +45,23 @@ public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         // jwt token 발행을 시작한다.
         GeneratedToken generatedToken = jwtUtil.generateToken(email, role);
 
-        // accessToken을 쿼리스트링에 담는 url을 만든다.
-        String redirectUrl = UriComponentsBuilder.fromUriString(URI)
-            .queryParam("accessToken", generatedToken.accessToken())
-            .build()
-            .encode(StandardCharsets.UTF_8)
-            .toUriString();
-        log.info("회원 access Token redirect 준비");
-        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+        switch (provider) {
+            case "kakao":
+                String kakaoRedirectUrl = UriComponentsBuilder.fromUriString(KAKAO_URI)
+                    .queryParam("accessToken", generatedToken.accessToken())
+                    .build()
+                    .encode(StandardCharsets.UTF_8)
+                    .toUriString();
+                log.info("카카오 회원 access Token redirect 준비");
+                getRedirectStrategy().sendRedirect(request, response, kakaoRedirectUrl);
+            case "naver":
+                String naverRedirectUrl = UriComponentsBuilder.fromUriString(NAVER_URI)
+                    .queryParam("accessToken", generatedToken.accessToken())
+                    .build()
+                    .encode(StandardCharsets.UTF_8)
+                    .toUriString();
+                log.info("네이버 회원 access Token redirect 준비");
+                getRedirectStrategy().sendRedirect(request, response, naverRedirectUrl);
+        }
     }
 }
