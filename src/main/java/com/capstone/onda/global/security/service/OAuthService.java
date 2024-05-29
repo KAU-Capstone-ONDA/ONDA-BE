@@ -28,10 +28,10 @@ public class OAuthService extends DefaultOAuth2UserService {
         //1. oAuth2User 정보를 가져온다.
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        //2. RegistrationId 가져오기 (third-party id - kakao)
+        //2. RegistrationId 가져오기 (third-party id - kakao, naver)
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        //3. userNameAttributeName 가져오기 (yml - id)
+        //3. userNameAttributeName 가져오기 (yml - id, response)
         String userNameAttributeName = userRequest.getClientRegistration()
             .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
