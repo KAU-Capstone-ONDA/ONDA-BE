@@ -1,7 +1,12 @@
 package com.capstone.onda.domain.member.service;
 
+import com.capstone.onda.domain.member.dto.request.MemberSignUpRequest;
+import com.capstone.onda.domain.member.dto.response.MemberResponse;
+import com.capstone.onda.domain.member.exception.AlreadyExistEmailException;
 import com.capstone.onda.domain.member.exception.InvalidTokenException;
 import com.capstone.onda.domain.member.repository.MemberAuthRepository;
+import com.capstone.onda.domain.member.repository.MemberRepository;
+import com.capstone.onda.domain.member.util.MemberMapper;
 import com.capstone.onda.global.exception.ErrorCode;
 import com.capstone.onda.global.security.dto.RefreshToken;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberAuthRepository memberAuthRepository;
+    private final MemberRepository memberRepository;
+
+    @Transactional
+    public MemberResponse signUp(MemberSignUpRequest memberSignUpRequest) {
+        if (memberRepository.findByUserEmail(memberSignUpRequest.email()).isPresent()) {
+            throw new AlreadyExistEmailException(ErrorCode.ALREADY_EXIST_ID_EXCEPTION);
+        }
+        return MemberMapper.toMemberResponse(memberRepository.save(
+            MemberMapper.toMember(memberSignUpRequest)));
+    }
 
     @Transactional
     public void logout(String accessToken) {
