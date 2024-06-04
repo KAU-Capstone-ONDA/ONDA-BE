@@ -55,3 +55,7 @@ jwt:
   refresh-token:
     expire-length: 7776000000 #1000L * 60L * 60L * 24L * 30L * 3L
 
+
+kakao:
+  base-url: ${KAKAO_BASE_URL}
+  key: ${KAKAO_KEY}
