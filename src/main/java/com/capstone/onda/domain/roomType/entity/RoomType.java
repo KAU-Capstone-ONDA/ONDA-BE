@@ -48,19 +48,19 @@ public class RoomType {
     private Hotel hotel;
 
     @Convert(converter = RoomTypeCategoryConverter.class)
-    private RoomTypeCategory roomTypeCategory; // Enum 타입 사용
+    private RoomTypeCategory roomTypeCategory;
 
     @Convert(converter = FacilityConverter.class)
-    private List<FacilityOption> facilityOptions = new ArrayList<>(); // Enum 타입 사용
+    private List<FacilityOption> facilityOptions = new ArrayList<>();
 
     @Convert(converter = AttractionConverter.class)
-    private List<AttractionOption> attractionOptions = new ArrayList<>(); // Enum 타입 사용
+    private List<AttractionOption> attractionOptions = new ArrayList<>();
 
     @Convert(converter = ServiceConverter.class)
-    private List<ServiceOption> serviceOptions = new ArrayList<>(); // Enum 타입 사용
+    private List<ServiceOption> serviceOptions = new ArrayList<>();
 
     @Convert(converter = AmenityConverter.class)
-    private List<AmenityOption> amenityOptions = new ArrayList<>(); // Enum 타입 사용
+    private List<AmenityOption> amenityOptions = new ArrayList<>();
 
 
 
