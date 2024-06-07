@@ -5,6 +5,7 @@ import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.hotel.exception.HotelNotFound;
 import com.capstone.onda.domain.hotel.repository.HotelRepository;
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypeListResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.domain.roomType.entity.RoomType;
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityOption;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -91,6 +93,15 @@ public class RoomTypeService {
                 .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
         return RoomTypeMapper.toRoomTypeResponse(roomType);
+    }
+
+    public List<RoomTypeListResponse> getListRoomType(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
+
+        return roomTypeRepository.findByHotelId(hotel.getId()).stream()
+                .map(RoomTypeListResponse::new)
+                .collect(Collectors.toList());
     }
 
 }
