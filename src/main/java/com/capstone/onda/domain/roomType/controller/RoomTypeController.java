@@ -2,6 +2,7 @@ package com.capstone.onda.domain.roomType.controller;
 
 
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypeListResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.domain.roomType.service.RoomTypeService;
 import com.capstone.onda.global.common.ResponseDTO;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "roomType api", description = "roomType 관련 API")
@@ -37,6 +40,11 @@ public class RoomTypeController {
         return ResponseDTO.res(roomTypeService.getOneRoomType(roomTypeId), "객실타입 조회에 성공했습니다.");
     }
 
-
+    @GetMapping("/v1/hotel/{hotelId}/room-types")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "객실타입 리스트 조회 API")
+    public ResponseDTO<List<RoomTypeListResponse>> getListRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long hotelId) {
+        return ResponseDTO.res(roomTypeService.getListRoomType(hotelId), "객실타입 리스트 조회에 성공했습니다.");
+    }
 
 }
