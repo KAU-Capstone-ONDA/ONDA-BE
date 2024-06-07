@@ -14,6 +14,7 @@ import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategory;
 import com.capstone.onda.domain.roomType.enumeration.service.ServiceOption;
 import com.capstone.onda.domain.roomType.exception.RoomTypeNotFound;
 import com.capstone.onda.domain.roomType.repository.RoomTypeRepository;
+import com.capstone.onda.domain.roomType.util.RoomTypeMapper;
 import com.capstone.onda.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -89,17 +90,8 @@ public class RoomTypeService {
         RoomType roomType = roomTypeRepository.findById(roomTypeId)
                 .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
-        return RoomTypeResponse.builder()
-                .id(roomType.getId())
-                .roomTypeName(roomType.getRoomTypeCategory())
-                .totalRoom(roomType.getTotalRoom())
-                .facilityOptions(roomType.getFacilityOptions())
-                .attractionOptions(roomType.getAttractionOptions())
-                .serviceOptions(roomType.getServiceOptions())
-                .amenityOptions(roomType.getAmenityOptions())
-                .build();
-        }
-
+        return RoomTypeMapper.toRoomTypeResponse(roomType);
+    }
 
 }
 

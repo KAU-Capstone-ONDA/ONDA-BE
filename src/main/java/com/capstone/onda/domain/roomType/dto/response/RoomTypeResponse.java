@@ -1,7 +1,6 @@
 package com.capstone.onda.domain.roomType.dto.response;
 
 
-import com.capstone.onda.domain.roomType.entity.RoomType;
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityOption;
 import com.capstone.onda.domain.roomType.enumeration.attraction.AttractionOption;
 import com.capstone.onda.domain.roomType.enumeration.facility.FacilityOption;
@@ -29,13 +28,6 @@ public class RoomTypeResponse {
 
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
-
-    // 생성자 오버로딩
-    public RoomTypeResponse(RoomType roomType) {
-        this.id = roomType.getId();
-        this.roomTypeName = roomType.getRoomTypeCategory();
-        this.totalRoom = roomType.getTotalRoom();
-    }
 
     @Builder
     public RoomTypeResponse(Long id, RoomTypeCategory roomTypeName, Integer totalRoom, List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions, List<AmenityOption> amenityOptions) {

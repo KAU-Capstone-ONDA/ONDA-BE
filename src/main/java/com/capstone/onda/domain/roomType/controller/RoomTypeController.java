@@ -34,8 +34,7 @@ public class RoomTypeController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 단건 조회 API")
     public ResponseDTO<RoomTypeResponse> getOneRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId) {
-        RoomTypeResponse response = roomTypeService.getOneRoomType(roomTypeId);
-        return ResponseDTO.res(response, "객실타입 조회에 성공했습니다.");
+        return ResponseDTO.res(roomTypeService.getOneRoomType(roomTypeId), "객실타입 조회에 성공했습니다.");
     }
 
 
