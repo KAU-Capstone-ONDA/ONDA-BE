@@ -12,8 +12,10 @@ public enum ErrorCode {
 
     // MEMBER
     ALREADY_EXIST_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 아이디입니다."),
+    ALREADY_EXIST_EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일입니다."),
     INVALID_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, "비밀번호는 아이디와 같을 수 없습니다."),
     INVALID_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, "해당하는 회원이 존재하지 않습니다."),
+    INVALID_PROVIDER_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "해당하는 Provider Type이 존재하지 않습니다."),
 
     // HOTEL
     INVALID_HOTEL_EXCEPTION(HttpStatus.BAD_REQUEST, "존재하지 않는 호텔입니다.,")
