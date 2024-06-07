@@ -2,6 +2,7 @@ package com.capstone.onda.domain.roomType.controller;
 
 
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.domain.roomType.service.RoomTypeService;
 import com.capstone.onda.global.common.ResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,14 @@ public class RoomTypeController {
         roomTypeService.postRoomType(hotelId, request);
         return ResponseDTO.res("객실타입 등록에 성공했습니다.");
     }
+
+    @GetMapping("/v1/room-types/{roomTypeId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "객실타입 단건 조회 API")
+    public ResponseDTO<RoomTypeResponse> getOneRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId) {
+        return ResponseDTO.res(roomTypeService.getOneRoomType(roomTypeId), "객실타입 조회에 성공했습니다.");
+    }
+
 
 
 }
