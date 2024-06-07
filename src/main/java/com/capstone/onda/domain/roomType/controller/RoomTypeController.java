@@ -1,6 +1,7 @@
 package com.capstone.onda.domain.roomType.controller;
 
 
+import com.capstone.onda.domain.roomType.dto.request.RoomTypeEdit;
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeListResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
@@ -45,6 +46,14 @@ public class RoomTypeController {
     @Operation(summary = "객실타입 리스트 조회 API")
     public ResponseDTO<List<RoomTypeListResponse>> getListRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long hotelId) {
         return ResponseDTO.res(roomTypeService.getListRoomType(hotelId), "객실타입 리스트 조회에 성공했습니다.");
+    }
+
+    @PatchMapping("/v1/room-types/{roomTypeId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "객실타입 수정 API")
+    public ResponseDTO<String> editRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
+        roomTypeService.editRoomType(roomTypeId, request);
+        return ResponseDTO.res("객실타입 수정에 성공했습니다.");
     }
 
 }
