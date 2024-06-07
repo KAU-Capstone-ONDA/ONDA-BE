@@ -6,13 +6,18 @@ import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
 import com.capstone.onda.domain.roomType.entity.RoomType;
 import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategory;
 import com.capstone.onda.domain.roomType.repository.RoomTypeRepository;
+import com.capstone.onda.global.config.SecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,8 +26,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 @AutoConfigureMockMvc
+@WebMvcTest(
+        controllers = RoomTypeController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        },
+        excludeAutoConfiguration = SecurityAutoConfiguration.class
+)
 class RoomTypeControllerTest {
 
     @Autowired
