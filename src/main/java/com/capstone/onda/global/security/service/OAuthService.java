@@ -4,6 +4,7 @@ import com.capstone.onda.domain.member.entity.Member;
 import com.capstone.onda.domain.member.repository.MemberRepository;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -46,15 +47,26 @@ public class OAuthService extends DefaultOAuth2UserService {
         //5. oAuth2Attribute의 속성 값들을 map으로 반환받는다.
         Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
 
-        //6-1. 회원 save 또는 update
-        Member member = saveOrUpdate(oAuth2Attribute);
+        String email = (String) memberAttribute.get("email");
 
-        return new DefaultOAuth2User(
-            Collections.singleton(
-                new SimpleGrantedAuthority(member.getUserRole().toString())),
-            memberAttribute, "email"); //nameAttributeKey : OAuth2 로그인 진행시 키가 되는 필드값 (PK)
+        Optional<Member> findMember = memberRepository.findByUserEmail(email);
+
+        if (findMember.isEmpty()) {
+            memberAttribute.put("exist", false);
+            return new DefaultOAuth2User(
+                Collections.singleton(
+                    new SimpleGrantedAuthority("ROLE_USER")),
+                memberAttribute, "email");
+        } else {
+            memberAttribute.put("exist", true);
+            return new DefaultOAuth2User(
+                Collections.singleton(
+                    new SimpleGrantedAuthority(findMember.get().getUserRole().toString())),
+                memberAttribute, "email");
+        }
     }
 
+    // v1 회원 가입 로직
     private Member saveOrUpdate(OAuthAttribute oAuth2Attribute) {
         Member member = memberRepository.findByUserEmail(oAuth2Attribute.getEmail())
             // 회원 정보 업데이트

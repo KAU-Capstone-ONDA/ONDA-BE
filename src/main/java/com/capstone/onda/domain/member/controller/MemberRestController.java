@@ -1,6 +1,9 @@
 package com.capstone.onda.domain.member.controller;
 
+import com.capstone.onda.domain.member.dto.request.MemberSignUpRequest;
+import com.capstone.onda.domain.member.dto.response.MemberResponse;
 import com.capstone.onda.domain.member.service.MemberService;
+import com.capstone.onda.domain.member.validation.ValidationSequence;
 import com.capstone.onda.global.common.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,13 @@ public class MemberRestController {
 
     private final MemberService memberService;
     private final String AUTHORIZATION_HEADER = "Authorization";
+
+    @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<MemberResponse> signup(@Validated(ValidationSequence.class) @RequestBody
+        MemberSignUpRequest memberSignUpRequest) {
+        return ResponseDTO.res(memberService.signUp(memberSignUpRequest), "회원가입에 성공했습니다.");
+    }
 
     @PostMapping("/token/logout")
     @ResponseStatus(HttpStatus.OK)
