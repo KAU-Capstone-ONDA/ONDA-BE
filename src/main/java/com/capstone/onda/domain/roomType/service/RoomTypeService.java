@@ -31,7 +31,7 @@ public class RoomTypeService {
 
 
     @Transactional
-    public void post(Long hotelId, RoomTypeRequest request) {
+    public void postRoomType(Long hotelId, RoomTypeRequest request) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
 
