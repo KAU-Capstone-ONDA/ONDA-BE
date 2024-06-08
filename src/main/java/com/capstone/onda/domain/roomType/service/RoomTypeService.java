@@ -113,6 +113,14 @@ public class RoomTypeService {
         roomType.edit(roomTypeEdit.getFacilityOptions(), roomTypeEdit.getAttractionOptions(), roomTypeEdit.getServiceOptions(), roomTypeEdit.getAmenityOptions());
     }
 
+    @Transactional
+    public void deleteRoomType(Long id) {
+        RoomType roomType = roomTypeRepository.findById(id)
+                .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+
+        roomTypeRepository.delete(roomType);
+    }
+
 }
 
 

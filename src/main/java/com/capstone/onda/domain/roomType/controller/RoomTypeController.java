@@ -57,4 +57,12 @@ public class RoomTypeController {
         return ResponseDTO.res("객실타입 수정에 성공했습니다.");
     }
 
+    @PostMapping("/room-types/{roomTypeId}/delete")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "객실타입 삭제 API")
+    public ResponseDTO<String> deleteRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId) {
+        roomTypeService.deleteRoomType(roomTypeId);
+        return ResponseDTO.res("객실타입 삭제에 성공했습니다.");
+    }
+
 }
