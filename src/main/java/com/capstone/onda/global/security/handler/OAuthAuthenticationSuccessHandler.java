@@ -21,9 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
-    private static final String KAKAO_URI = "http://localhost:3000/kakaoLogin";
-    private static final String NAVER_URI = "http://localhost:3000/naverLogin";
-    private static final String SIGNUP_URI = "http://localhost:3000/signUp";
+    private static final String LOGIN_URI = "http://localhost:3000/oauthlogin";
+    private static final String SIGNUP_URI = "http://localhost:3000/signup";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -49,52 +48,23 @@ public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
 
         if (isExist) {
             GeneratedToken generatedToken = jwtUtil.generateToken(email, role);
-
-            switch (provider) {
-                case "kakao":
-                    String kakaoRedirectUrl = UriComponentsBuilder.fromUriString(KAKAO_URI)
-                        .queryParam("accessToken", generatedToken.accessToken())
-                        .build()
-                        .encode(StandardCharsets.UTF_8)
-                        .toUriString();
-                    log.info("카카오 회원 access Token redirect 준비");
-                    getRedirectStrategy().sendRedirect(request, response, kakaoRedirectUrl);
-                    break;
-                case "naver":
-                    String naverRedirectUrl = UriComponentsBuilder.fromUriString(NAVER_URI)
-                        .queryParam("accessToken", generatedToken.accessToken())
-                        .build()
-                        .encode(StandardCharsets.UTF_8)
-                        .toUriString();
-                    log.info("네이버 회원 access Token redirect 준비");
-                    getRedirectStrategy().sendRedirect(request, response, naverRedirectUrl);
-                    break;
-            }
+            String loginRedirectUrl = UriComponentsBuilder.fromUriString(LOGIN_URI)
+                .queryParam("accessToken", generatedToken.accessToken())
+                .build()
+                .encode(StandardCharsets.UTF_8)
+                .toUriString();
+            log.info(provider + "회원 access Token redirect 준비");
+            getRedirectStrategy().sendRedirect(request, response, loginRedirectUrl);
         } else {
-            switch (provider) {
-                case "kakao":
-                    String kakaoSignUpRedirectUrl = UriComponentsBuilder.fromUriString(SIGNUP_URI)
-                        .queryParam("email", email)
-                        .queryParam("nickname", nickname)
-                        .queryParam("provider", provider)
-                        .build()
-                        .encode(StandardCharsets.UTF_8)
-                        .toUriString();
-                    log.info("카카오 회원 회원가입 준비");
-                    getRedirectStrategy().sendRedirect(request, response, kakaoSignUpRedirectUrl);
-                    break;
-                case "naver":
-                    String naverSignUpRedirectUrl = UriComponentsBuilder.fromUriString(SIGNUP_URI)
-                        .queryParam("email", email)
-                        .queryParam("nickname", nickname)
-                        .queryParam("provider", provider)
-                        .build()
-                        .encode(StandardCharsets.UTF_8)
-                        .toUriString();
-                    log.info("네이버 회원 회원가입 준비");
-                    getRedirectStrategy().sendRedirect(request, response, naverSignUpRedirectUrl);
-                    break;
-            }
+            String signupRedirectUrl = UriComponentsBuilder.fromUriString(SIGNUP_URI)
+                .queryParam("email", email)
+                .queryParam("nickname", nickname)
+                .queryParam("provider", provider)
+                .build()
+                .encode(StandardCharsets.UTF_8)
+                .toUriString();
+            log.info(provider + "회원 회원가입 준비");
+            getRedirectStrategy().sendRedirect(request, response, signupRedirectUrl);
         }
     }
 }
