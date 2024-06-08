@@ -20,13 +20,14 @@ import java.util.List;
 @Slf4j
 @Tag(name = "roomType api", description = "roomType 관련 API")
 @RestController
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class RoomTypeController {
 
     private final RoomTypeService roomTypeService;
     private final String AUTHORIZATION_HEADER = "Authorization";
 
-    @PostMapping("/v1/hotel/{hotelId}/room-types/create")
+    @PostMapping("/hotel/{hotelId}/room-types/create")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 등록 API")
     public ResponseDTO<String> postRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long hotelId, @RequestBody @Valid RoomTypeRequest request) {
@@ -34,21 +35,21 @@ public class RoomTypeController {
         return ResponseDTO.res("객실타입 등록에 성공했습니다.");
     }
 
-    @GetMapping("/v1/room-types/{roomTypeId}")
+    @GetMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 단건 조회 API")
     public ResponseDTO<RoomTypeResponse> getOneRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId) {
         return ResponseDTO.res(roomTypeService.getOneRoomType(roomTypeId), "객실타입 조회에 성공했습니다.");
     }
 
-    @GetMapping("/v1/hotel/{hotelId}/room-types")
+    @GetMapping("/hotel/{hotelId}/room-types")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 리스트 조회 API")
     public ResponseDTO<List<RoomTypeListResponse>> getListRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long hotelId) {
         return ResponseDTO.res(roomTypeService.getListRoomType(hotelId), "객실타입 리스트 조회에 성공했습니다.");
     }
 
-    @PatchMapping("/v1/room-types/{roomTypeId}")
+    @PatchMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 수정 API")
     public ResponseDTO<String> editRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
