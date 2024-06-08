@@ -4,6 +4,7 @@ package com.capstone.onda.domain.roomType.service;
 import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.hotel.exception.HotelNotFound;
 import com.capstone.onda.domain.hotel.repository.HotelRepository;
+import com.capstone.onda.domain.roomType.dto.request.RoomTypeEdit;
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeListResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
@@ -102,6 +103,14 @@ public class RoomTypeService {
         return roomTypeRepository.findByHotelId(hotel.getId()).stream()
                 .map(RoomTypeListResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void editRoomType(Long id, RoomTypeEdit roomTypeEdit) {
+        RoomType roomType = roomTypeRepository.findById(id)
+                .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+
+        roomType.edit(roomTypeEdit.getFacilityOptions(), roomTypeEdit.getAttractionOptions(), roomTypeEdit.getServiceOptions(), roomTypeEdit.getAmenityOptions());
     }
 
 }
