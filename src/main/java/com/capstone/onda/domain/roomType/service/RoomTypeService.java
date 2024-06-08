@@ -4,9 +4,13 @@ package com.capstone.onda.domain.roomType.service;
 import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.hotel.exception.HotelNotFound;
 import com.capstone.onda.domain.hotel.repository.HotelRepository;
+import com.capstone.onda.domain.member.entity.Member;
+import com.capstone.onda.domain.member.exception.InvalidMemberException;
+import com.capstone.onda.domain.member.repository.MemberRepository;
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeEdit;
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeListResponse;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypePostResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.domain.roomType.entity.RoomType;
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityOption;
@@ -18,14 +22,14 @@ import com.capstone.onda.domain.roomType.exception.RoomTypeNotFound;
 import com.capstone.onda.domain.roomType.repository.RoomTypeRepository;
 import com.capstone.onda.domain.roomType.util.RoomTypeMapper;
 import com.capstone.onda.global.exception.ErrorCode;
+import com.capstone.onda.global.security.dto.SecurityUser;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -34,20 +38,22 @@ public class RoomTypeService {
 
     private final RoomTypeRepository roomTypeRepository;
     private final HotelRepository hotelRepository;
-
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public void postRoomType(Long hotelId, RoomTypeRequest request) {
-        Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
+    public RoomTypePostResponse postRoomType(SecurityUser securityUser, RoomTypeRequest request) {
+        Member member = memberRepository.findByUserEmail(securityUser.email()).orElseThrow(
+            () -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
+        Hotel hotel = hotelRepository.findById(member.getHotel().getId())
+            .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
 
         RoomTypeCategory roomTypeName = request.getRoomTypeName();
         Integer totalRoom = request.getTotalRoom();
 
         RoomType roomType = RoomType.builder()
-                .roomTypeCategory(roomTypeName)
-                .totalRoom(totalRoom)
-                .build();
+            .roomTypeCategory(roomTypeName)
+            .totalRoom(totalRoom)
+            .build();
 
         List<FacilityOption> facilityOptions = request.getFacilityOptions();
         List<AttractionOption> attractionOptions = request.getAttractionOptions();
@@ -86,31 +92,33 @@ public class RoomTypeService {
 
         hotel.addRoomType(roomType);
 
-        roomTypeRepository.save(roomType);
+        RoomType savedRoomType = roomTypeRepository.save(roomType);
+        return RoomTypeMapper.toRoomTypePostResponse(hotel.getId(), savedRoomType);
     }
 
     public RoomTypeResponse getOneRoomType(Long roomTypeId) {
         RoomType roomType = roomTypeRepository.findById(roomTypeId)
-                .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+            .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
         return RoomTypeMapper.toRoomTypeResponse(roomType);
     }
 
     public List<RoomTypeListResponse> getListRoomType(Long hotelId) {
         Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
+            .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
 
         return roomTypeRepository.findByHotelId(hotel.getId()).stream()
-                .map(RoomTypeListResponse::new)
-                .collect(Collectors.toList());
+            .map(RoomTypeListResponse::new)
+            .collect(Collectors.toList());
     }
 
     @Transactional
     public void editRoomType(Long id, RoomTypeEdit roomTypeEdit) {
         RoomType roomType = roomTypeRepository.findById(id)
-                .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+            .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
-        roomType.edit(roomTypeEdit.getFacilityOptions(), roomTypeEdit.getAttractionOptions(), roomTypeEdit.getServiceOptions(), roomTypeEdit.getAmenityOptions());
+        roomType.edit(roomTypeEdit.getFacilityOptions(), roomTypeEdit.getAttractionOptions(),
+            roomTypeEdit.getServiceOptions(), roomTypeEdit.getAmenityOptions());
     }
 
     @Transactional

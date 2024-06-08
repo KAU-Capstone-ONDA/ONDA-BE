@@ -13,3 +13,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+
+jwt:
+  access-token:
+    expire-length: 600000 #1000L * 60L * 10L
+  refresh-token:
+    expire-length: 7776000000 #1000L * 60L * 60L * 24L * 30L * 3L
