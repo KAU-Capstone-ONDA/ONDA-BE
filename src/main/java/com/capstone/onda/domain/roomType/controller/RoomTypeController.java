@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,35 +47,30 @@ public class RoomTypeController {
     @GetMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 단건 조회 API")
-    public ResponseDTO<RoomTypeResponse> getOneRoomType(
-        @RequestHeader(AUTHORIZATION_HEADER) final String accessToken,
-        @PathVariable Long roomTypeId) {
-        return ResponseDTO.res(roomTypeService.getOneRoomType(roomTypeId), "객실타입 조회에 성공했습니다.");
+    public ResponseDTO<RoomTypeResponse> getOneRoomType(@PathVariable Long roomTypeId) {
+        return ResponseDTO.res(roomTypeService.getOneRoomType(SecurityUtil.getUser(), roomTypeId), "객실타입 조회에 성공했습니다.");
     }
 
-    @GetMapping("/hotel/{hotelId}/room-types")
+    @GetMapping("/hotel/room-types")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 리스트 조회 API")
-    public ResponseDTO<List<RoomTypeListResponse>> getListRoomType(
-        @RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long hotelId) {
-        return ResponseDTO.res(roomTypeService.getListRoomType(hotelId), "객실타입 리스트 조회에 성공했습니다.");
+    public ResponseDTO<List<RoomTypeListResponse>> getListRoomType() {
+        return ResponseDTO.res(roomTypeService.getListRoomType(SecurityUtil.getUser()), "객실타입 리스트 조회에 성공했습니다.");
     }
 
     @PatchMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 수정 API")
-    public ResponseDTO<String> editRoomType(
-        @RequestHeader(AUTHORIZATION_HEADER) final String accessToken,
-        @PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
-        roomTypeService.editRoomType(roomTypeId, request);
+    public ResponseDTO<String> editRoomType(@PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
+        roomTypeService.editRoomType(SecurityUtil.getUser(), roomTypeId, request);
         return ResponseDTO.res("객실타입 수정에 성공했습니다.");
     }
 
     @PostMapping("/room-types/{roomTypeId}/delete")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 삭제 API")
-    public ResponseDTO<String> deleteRoomType(@RequestHeader(AUTHORIZATION_HEADER) final String accessToken, @PathVariable Long roomTypeId) {
-        roomTypeService.deleteRoomType(roomTypeId);
+    public ResponseDTO<String> deleteRoomType(@PathVariable Long roomTypeId) {
+        roomTypeService.deleteRoomType(SecurityUtil.getUser(), roomTypeId);
         return ResponseDTO.res("객실타입 삭제에 성공했습니다.");
     }
 

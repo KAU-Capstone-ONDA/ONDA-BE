@@ -1,6 +1,5 @@
 package com.capstone.onda.domain.roomType.dto.response;
 
-
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityOption;
 import com.capstone.onda.domain.roomType.enumeration.attraction.AttractionOption;
 import com.capstone.onda.domain.roomType.enumeration.facility.FacilityOption;
@@ -9,12 +8,11 @@ import com.capstone.onda.domain.roomType.enumeration.service.ServiceOption;
 import lombok.Builder;
 import lombok.Data;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class RoomTypeResponse {
+public class RoomTypeEditResponse {
 
     private Long hotelId;
     private Long roomTypeId;
@@ -29,11 +27,11 @@ public class RoomTypeResponse {
 
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
-
     @Builder
-    public RoomTypeResponse(Long hotelId, Long roomTypeId, RoomTypeCategory roomTypeName, Integer totalRoom,
-                            List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions,
-                            List<ServiceOption> serviceOptions, List<AmenityOption> amenityOptions) {
+    public RoomTypeEditResponse(Long hotelId, Long roomTypeId, RoomTypeCategory roomTypeName,
+                                Integer totalRoom, List<FacilityOption> facilityOptions,
+                                List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions,
+                                List<AmenityOption> amenityOptions) {
         this.hotelId = hotelId;
         this.roomTypeId = roomTypeId;
         this.roomTypeName = roomTypeName;
