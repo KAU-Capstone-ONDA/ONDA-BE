@@ -3,6 +3,8 @@ package com.capstone.onda.domain.hotel.entity;
 
 import com.capstone.onda.domain.roomType.entity.RoomType;
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +41,14 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<RoomType> roomTypes = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+        name = "competing_hotel",
+        joinColumns = @JoinColumn(name = "hotel_id"),
+        inverseJoinColumns = @JoinColumn(name = "competing_hotel_id")
+    )
+    private Set<Hotel> competingHotel = new HashSet<>();
+
     @Builder
     public Hotel(Long id, String hotelName, String region, String city, Integer star) {
         this.id = id;
@@ -52,4 +62,9 @@ public class Hotel {
         roomType.setHotel(this);
         this.roomTypes.add(roomType);
     }
+
+    public void addCompetingHotel(Hotel competingHotel) {
+        this.competingHotel.add(competingHotel);
+    }
+
 }
