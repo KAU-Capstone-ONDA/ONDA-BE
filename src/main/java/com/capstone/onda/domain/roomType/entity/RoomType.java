@@ -1,6 +1,7 @@
 package com.capstone.onda.domain.roomType.entity;
 
 
+import static jakarta.persistence.FetchType.LAZY;
 
 import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityConverter;
@@ -13,24 +14,33 @@ import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategory;
 import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategoryConverter;
 import com.capstone.onda.domain.roomType.enumeration.service.ServiceConverter;
 import com.capstone.onda.domain.roomType.enumeration.service.ServiceOption;
-import jakarta.persistence.*;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
-
 @Entity
 @Getter
 @Table(
-        indexes = {
-                @Index(name = "IDX_ROOMTYPE_HOTEL_ID", columnList = "hotel_id")
-        }
+    indexes = {
+        @Index(name = "IDX_ROOMTYPE_HOTEL_ID", columnList = "hotel_id")
+    }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RoomType {
@@ -62,6 +72,13 @@ public class RoomType {
     @Convert(converter = AmenityConverter.class)
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+        name = "competing_room_type",
+        joinColumns = @JoinColumn(name = "room_type_id"),
+        inverseJoinColumns = @JoinColumn(name = "competing_room_type_id")
+    )
+    private Set<RoomType> competingRoomType = new HashSet<>();
 
     @Builder
     public RoomType(Integer totalRoom, RoomTypeCategory roomTypeCategory) {
@@ -74,14 +91,17 @@ public class RoomType {
     }
 
 
-    public void edit(List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions, List<AmenityOption> amenityOptions) {
+    public void edit(List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions,
+        List<ServiceOption> serviceOptions, List<AmenityOption> amenityOptions) {
         this.facilityOptions = facilityOptions != null ? facilityOptions : new ArrayList<>();
         this.attractionOptions = attractionOptions != null ? attractionOptions : new ArrayList<>();
         this.serviceOptions = serviceOptions != null ? serviceOptions : new ArrayList<>();
         this.amenityOptions = amenityOptions != null ? amenityOptions : new ArrayList<>();
     }
 
-    public void setHotel(Hotel hotel) { this.hotel = hotel; }
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
     public void addFacilityOption(FacilityOption facilityOption) {
         facilityOptions.add(facilityOption);
@@ -97,6 +117,10 @@ public class RoomType {
 
     public void addAmenityOption(AmenityOption amenityOption) {
         amenityOptions.add(amenityOption);
+    }
+
+    public void addCompetingRoomType(RoomType competingRoomType) {
+        this.competingRoomType.add(competingRoomType);
     }
 
 
