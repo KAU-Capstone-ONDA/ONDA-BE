@@ -111,6 +111,11 @@ public class HotelService {
         RoomType roomType = roomTypeRepository.findById(roomTypeId)
             .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
+        // 내 호텔에 속한 객실 타입인지 검증하는 구문
+        if (!Objects.equals(member.getHotel().getId(), roomType.getHotel().getId())) {
+            throw new RoomTypeNotFound(ErrorCode.NOT_EXIST_ROOMTYPE_EXCEPTION);
+        }
+
         return roomType.getCompetingRoomType().stream().map(
             (competingRoomType) -> RoomTypeMapper.toRoomTypeResponse(member.getHotel().getId(),
                 competingRoomType)).collect(
