@@ -15,7 +15,8 @@ import java.util.List;
 
 @Data
 public class RoomTypeListResponse {
-    private Long id;
+    private Long hotelId;
+    private Long roomTypeId;
     private RoomTypeCategory roomTypeName;
     private Integer totalRoom;
 
@@ -27,9 +28,9 @@ public class RoomTypeListResponse {
 
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
-
     public RoomTypeListResponse(RoomType roomType) {
-        this.id = roomType.getId();
+        this.hotelId = roomType.getHotel().getId();
+        this.roomTypeId = roomType.getId();
         this.roomTypeName = roomType.getRoomTypeCategory();
         this.totalRoom = roomType.getTotalRoom();
     }
