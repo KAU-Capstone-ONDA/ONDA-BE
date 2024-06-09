@@ -5,14 +5,17 @@ import com.capstone.onda.domain.hotel.repository.HotelRepository;
 import com.capstone.onda.domain.hotel.util.HotelMapper;
 import com.capstone.onda.domain.member.dto.request.MemberSignUpRequest;
 import com.capstone.onda.domain.member.dto.response.MemberResponse;
+import com.capstone.onda.domain.member.entity.Member;
 import com.capstone.onda.domain.member.exception.AlreadyExistEmailException;
 import com.capstone.onda.domain.member.exception.InvalidHotelException;
+import com.capstone.onda.domain.member.exception.InvalidMemberException;
 import com.capstone.onda.domain.member.exception.InvalidTokenException;
 import com.capstone.onda.domain.member.repository.MemberAuthRepository;
 import com.capstone.onda.domain.member.repository.MemberRepository;
 import com.capstone.onda.domain.member.util.MemberMapper;
 import com.capstone.onda.global.exception.ErrorCode;
 import com.capstone.onda.global.security.dto.RefreshToken;
+import com.capstone.onda.global.security.dto.SecurityUser;
 import jakarta.annotation.PostConstruct;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -104,5 +107,10 @@ public class MemberService {
     @Transactional
     public void saveTokenInfo(String email, String accessToken, String refreshToken) {
         memberAuthRepository.save(new RefreshToken(email, accessToken, refreshToken));
+    }
+
+    public Member validateMember(SecurityUser securityUser) {
+        return memberRepository.findByUserEmail(securityUser.email())
+            .orElseThrow(() -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
     }
 }
