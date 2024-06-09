@@ -64,4 +64,17 @@ public class HotelService {
             .collect(Collectors.toList());
     }
 
+    public List<HotelResponse> findAllCompetingHotel(SecurityUser securityUser) {
+
+        Member member = memberRepository.findByUserEmail(securityUser.email()).orElseThrow(
+            () -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
+
+        Hotel hotel = hotelRepository.findById(member.getHotel().getId())
+            .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
+
+        return hotel.getCompetingHotel().stream()
+            .map(HotelMapper::toHotelResponse)
+            .collect(Collectors.toList());
+    }
+
 }

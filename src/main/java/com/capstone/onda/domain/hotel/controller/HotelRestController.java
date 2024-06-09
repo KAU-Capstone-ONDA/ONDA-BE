@@ -40,4 +40,10 @@ public class HotelRestController {
             "경쟁 호텔 등록에 성공했습니다.");
     }
 
+    @GetMapping("/competing-hotel")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<List<HotelResponse>> getCompetingHotel() {
+        return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUser()),
+            "경쟁 호텔 조회에 성공했습니다.");
+    }
 }
