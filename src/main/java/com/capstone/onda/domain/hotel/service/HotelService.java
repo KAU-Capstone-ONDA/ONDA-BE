@@ -103,4 +103,18 @@ public class HotelService {
                 tmpRoomType)).collect(Collectors.toList());
     }
 
+    public List<RoomTypeResponse> findAllCompetingRoomType(SecurityUser securityUser,
+        Long roomTypeId) {
+
+        Member member = memberService.validateMember(securityUser);
+
+        RoomType roomType = roomTypeRepository.findById(roomTypeId)
+            .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+
+        return roomType.getCompetingRoomType().stream().map(
+            (competingRoomType) -> RoomTypeMapper.toRoomTypeResponse(member.getHotel().getId(),
+                competingRoomType)).collect(
+            Collectors.toList());
+    }
+
 }
