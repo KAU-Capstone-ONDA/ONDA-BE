@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("v1")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class HotelRestController {
 
@@ -24,7 +24,7 @@ public class HotelRestController {
     @GetMapping("/hotel")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<HotelResponse>> getAllHotels(@RequestParam String name) {
-        return ResponseDTO.res(hotelService.getHotel(name), "hotel return success");
+        return ResponseDTO.res(hotelService.getHotel(name), "호텔 검색에 성공했습니다.");
     }
 
 }
