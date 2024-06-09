@@ -1,6 +1,7 @@
 package com.capstone.onda.domain.hotel.service;
 
 import com.capstone.onda.domain.hotel.dto.request.CompetingHotelRequest;
+import com.capstone.onda.domain.hotel.dto.request.CompetingRoomTypeRequest;
 import com.capstone.onda.domain.hotel.dto.response.HotelResponse;
 import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.hotel.exception.HotelNotFound;
@@ -9,10 +10,16 @@ import com.capstone.onda.domain.hotel.util.HotelMapper;
 import com.capstone.onda.domain.member.entity.Member;
 import com.capstone.onda.domain.member.exception.InvalidMemberException;
 import com.capstone.onda.domain.member.repository.MemberRepository;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
+import com.capstone.onda.domain.roomType.entity.RoomType;
+import com.capstone.onda.domain.roomType.exception.RoomTypeNotFound;
+import com.capstone.onda.domain.roomType.repository.RoomTypeRepository;
+import com.capstone.onda.domain.roomType.util.RoomTypeMapper;
 import com.capstone.onda.global.exception.ErrorCode;
 import com.capstone.onda.global.security.dto.SecurityUser;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +32,7 @@ public class HotelService {
 
     private final HotelRepository hotelRepository;
     private final MemberRepository memberRepository;
+    private final RoomTypeRepository roomTypeRepository;
 
     public List<HotelResponse> getHotel(String hotelName) {
         if (hotelName.isBlank()) {
@@ -38,17 +46,14 @@ public class HotelService {
             throw new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION);
         }
 
-        return hotels.stream()
-            .map(HotelMapper::toHotelResponse)
-            .collect(Collectors.toList());
+        return hotels.stream().map(HotelMapper::toHotelResponse).collect(Collectors.toList());
     }
 
     @Transactional
     public List<HotelResponse> registerCompetingHotel(SecurityUser securityUser,
         CompetingHotelRequest competingHotelRequestDTO) {
 
-        Member member = memberRepository.findByUserEmail(securityUser.email()).orElseThrow(
-            () -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
+        Member member = validateMember(securityUser);
 
         Hotel hotel = hotelRepository.findById(member.getHotel().getId())
             .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
@@ -59,22 +64,50 @@ public class HotelService {
 
         hotel.addCompetingHotel(competingHotel);
 
-        return hotel.getCompetingHotel().stream()
-            .map(HotelMapper::toHotelResponse)
+        return hotel.getCompetingHotel().stream().map(HotelMapper::toHotelResponse)
             .collect(Collectors.toList());
     }
 
     public List<HotelResponse> findAllCompetingHotel(SecurityUser securityUser) {
 
-        Member member = memberRepository.findByUserEmail(securityUser.email()).orElseThrow(
-            () -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
+        Member member = validateMember(securityUser);
 
         Hotel hotel = hotelRepository.findById(member.getHotel().getId())
             .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
 
-        return hotel.getCompetingHotel().stream()
-            .map(HotelMapper::toHotelResponse)
+        return hotel.getCompetingHotel().stream().map(HotelMapper::toHotelResponse)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<RoomTypeResponse> registerCompetingRoomType(SecurityUser securityUser,
+        Long roomTypeId, CompetingRoomTypeRequest competingRoomTypeRequest) {
+
+        Member member = validateMember(securityUser);
+
+        RoomType roomType = roomTypeRepository.findById(roomTypeId)
+            .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+        
+        // 내 호텔에 속한 객실 타입인지 검증하는 구문
+        if (!Objects.equals(member.getHotel().getId(), roomType.getHotel().getId())) {
+            throw new RoomTypeNotFound(ErrorCode.NOT_EXIST_ROOMTYPE_EXCEPTION);
+        }
+
+        RoomType competingRoomType = roomTypeRepository.findById(
+                competingRoomTypeRequest.getCompetingRoomTypeId())
+            .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
+
+        roomType.addCompetingRoomType(competingRoomType);
+
+        return roomType.getCompetingRoomType().stream()
+            .map((tmpRoomType) -> RoomTypeMapper.toRoomTypeResponse(
+                member.getHotel().getId(), tmpRoomType))
+            .collect(Collectors.toList());
+    }
+
+    private Member validateMember(SecurityUser securityUser) {
+        return memberRepository.findByUserEmail(securityUser.email())
+            .orElseThrow(() -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
     }
 
 }

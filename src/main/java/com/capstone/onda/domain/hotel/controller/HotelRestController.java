@@ -1,8 +1,10 @@
 package com.capstone.onda.domain.hotel.controller;
 
 import com.capstone.onda.domain.hotel.dto.request.CompetingHotelRequest;
+import com.capstone.onda.domain.hotel.dto.request.CompetingRoomTypeRequest;
 import com.capstone.onda.domain.hotel.dto.response.HotelResponse;
 import com.capstone.onda.domain.hotel.service.HotelService;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.global.common.ResponseDTO;
 import com.capstone.onda.global.security.util.SecurityUtil;
 import jakarta.validation.Valid;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,5 +48,14 @@ public class HotelRestController {
     public ResponseDTO<List<HotelResponse>> getCompetingHotel() {
         return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUser()),
             "경쟁 호텔 조회에 성공했습니다.");
+    }
+
+    @PostMapping("/competing-room-type/{roomTypeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<List<RoomTypeResponse>> postCompetingRoomType(@PathVariable Long roomTypeId,
+        @RequestBody @Valid CompetingRoomTypeRequest request) {
+        return ResponseDTO.res(
+            hotelService.registerCompetingRoomType(SecurityUtil.getUser(), roomTypeId, request),
+            "경쟁 객실 타입 등록에 성공했습니다.");
     }
 }
