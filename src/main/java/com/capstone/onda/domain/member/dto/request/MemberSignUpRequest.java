@@ -27,18 +27,21 @@ public record MemberSignUpRequest(
 
     @NotBlank(groups = NotBlankGroup.class)
     @Size(max = 20, message = "시/군/구의 길이는 20자 이내여야 합니다.", groups = SizeGroup.class)
-    String city
+    String city,
+
+    Integer star
 ) {
 
     @Builder
     public MemberSignUpRequest(String email, String name, String provider, String hotelName,
-        String region, String city) {
+        String region, String city, Integer star) {
         this.email = email;
         this.name = name;
         this.provider = provider;
         this.hotelName = hotelName;
         this.region = region;
         this.city = city;
+        this.star = star;
     }
 }
 

@@ -22,7 +22,7 @@ public class MemberMapper {
             .build();
     }
 
-    public static MemberResponse toMemberResponse(Member member){
+    public static MemberResponse toMemberResponse(Member member) {
         return MemberResponse.builder()
             .id(member.getId())
             .email(member.getUserEmail())
@@ -30,6 +30,7 @@ public class MemberMapper {
             .hotelName(member.getHotel().getHotelName())
             .region(member.getHotel().getRegion())
             .city(member.getHotel().getCity())
+            .star(member.getHotel().getStar())
             .build();
     }
 

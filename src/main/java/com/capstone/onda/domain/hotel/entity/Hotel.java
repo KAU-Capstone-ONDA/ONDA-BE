@@ -33,15 +33,19 @@ public class Hotel {
     @Comment("도시")
     private String city;
 
+    @Comment("등급")
+    private Integer star;
+
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<RoomType> roomTypes = new ArrayList<>();
 
     @Builder
-    public Hotel(Long id, String hotelName, String region, String city) {
+    public Hotel(Long id, String hotelName, String region, String city, Integer star) {
         this.id = id;
         this.hotelName = hotelName;
         this.region = region;
         this.city = city;
+        this.star = star;
     }
 
     public void addRoomType(RoomType roomType) {
