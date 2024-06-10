@@ -2,6 +2,7 @@ package com.capstone.onda.domain.hotel.service;
 
 import com.capstone.onda.domain.hotel.dto.request.CompetingHotelRequest;
 import com.capstone.onda.domain.hotel.dto.request.CompetingRoomTypeRequest;
+import com.capstone.onda.domain.hotel.dto.response.HotelOnlyResponse;
 import com.capstone.onda.domain.hotel.dto.response.HotelResponse;
 import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.hotel.exception.HotelNotFound;
@@ -48,7 +49,7 @@ public class HotelService {
         return hotels.stream().map(HotelMapper::toHotelResponse).collect(Collectors.toList());
     }
 
-    public HotelResponse findHotel(SecurityUser securityUser, Long hotelId){
+    public HotelResponse findHotel(SecurityUser securityUser, Long hotelId) {
 
         Member member = memberService.validateMember(securityUser);
 
@@ -77,14 +78,14 @@ public class HotelService {
             .collect(Collectors.toList());
     }
 
-    public List<HotelResponse> findAllCompetingHotel(SecurityUser securityUser) {
+    public List<HotelOnlyResponse> findAllCompetingHotel(SecurityUser securityUser) {
 
         Member member = memberService.validateMember(securityUser);
 
         Hotel hotel = hotelRepository.findById(member.getHotel().getId())
             .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
 
-        return hotel.getCompetingHotel().stream().map(HotelMapper::toHotelResponse)
+        return hotel.getCompetingHotel().stream().map(HotelMapper::toHotelOnlyResponse)
             .collect(Collectors.toList());
     }
 
