@@ -1,12 +1,12 @@
 package com.capstone.onda.domain.roomType.dto.response;
 
-import com.capstone.onda.domain.roomType.entity.RoomType;
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityOption;
 import com.capstone.onda.domain.roomType.enumeration.attraction.AttractionOption;
 import com.capstone.onda.domain.roomType.enumeration.facility.FacilityOption;
 import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategory;
 import com.capstone.onda.domain.roomType.enumeration.service.ServiceOption;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -29,12 +29,20 @@ public class RoomTypeListResponse {
 
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
-    public RoomTypeListResponse(RoomType roomType) {
-        this.hotelId = roomType.getHotel().getId();
-        this.roomTypeId = roomType.getId();
-        this.roomTypeName = roomType.getRoomTypeCategory();
-        this.totalRoom = roomType.getTotalRoom();
-        this.people = roomType.getPeople();
+    @Builder
+    public RoomTypeListResponse(Long hotelId, Long roomTypeId, RoomTypeCategory roomTypeName,
+                                Integer totalRoom, Integer people, List<FacilityOption> facilityOptions,
+                                List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions,
+                                List<AmenityOption> amenityOptions) {
+        this.hotelId = hotelId;
+        this.roomTypeId = roomTypeId;
+        this.roomTypeName = roomTypeName;
+        this.totalRoom = totalRoom;
+        this.people = people;
+        this.facilityOptions = facilityOptions;
+        this.attractionOptions = attractionOptions;
+        this.serviceOptions = serviceOptions;
+        this.amenityOptions = amenityOptions;
     }
 
 }

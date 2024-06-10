@@ -117,7 +117,7 @@ public class RoomTypeService {
                 .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
 
         return roomTypeRepository.findByHotelId(hotel.getId()).stream()
-            .map(RoomTypeListResponse::new)
+            .map(RoomTypeMapper::toRoomTypeListResponse)
             .collect(Collectors.toList());
     }
 
@@ -130,10 +130,16 @@ public class RoomTypeService {
         RoomType roomType = roomTypeRepository.findById(roomTypeId)
             .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
-        roomType.edit(roomTypeEdit.getFacilityOptions(), roomTypeEdit.getAttractionOptions(),
-            roomTypeEdit.getServiceOptions(), roomTypeEdit.getAmenityOptions());
+        List<FacilityOption> facilityOptions = roomTypeEdit.getFacilityOptions();
+        List<AttractionOption> attractionOptions = roomTypeEdit.getAttractionOptions();
+        List<ServiceOption> serviceOptions = roomTypeEdit.getServiceOptions();
+        List<AmenityOption> amenityOptions = roomTypeEdit.getAmenityOptions();
 
-        return RoomTypeMapper.toRoomTypeEditResponse(hotel.getId(), roomType);
+        roomType.edit(facilityOptions, attractionOptions, serviceOptions, amenityOptions);
+
+        RoomType savedRoomType = roomTypeRepository.save(roomType);
+
+        return RoomTypeMapper.toRoomTypeEditResponse(hotel.getId(), savedRoomType);
     }
 
     @Transactional

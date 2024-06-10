@@ -14,17 +14,8 @@ import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategory;
 import com.capstone.onda.domain.roomType.enumeration.roomType.RoomTypeCategoryConverter;
 import com.capstone.onda.domain.roomType.enumeration.service.ServiceConverter;
 import com.capstone.onda.domain.roomType.enumeration.service.ServiceOption;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,15 +55,19 @@ public class RoomType {
     private RoomTypeCategory roomTypeCategory;
 
     @Convert(converter = FacilityConverter.class)
+    @Column(columnDefinition = "TEXT")
     private List<FacilityOption> facilityOptions = new ArrayList<>();
 
     @Convert(converter = AttractionConverter.class)
+    @Column(columnDefinition = "TEXT")
     private List<AttractionOption> attractionOptions = new ArrayList<>();
 
     @Convert(converter = ServiceConverter.class)
+    @Column(columnDefinition = "TEXT")
     private List<ServiceOption> serviceOptions = new ArrayList<>();
 
     @Convert(converter = AmenityConverter.class)
+    @Column(columnDefinition = "TEXT")
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
     @ManyToMany
