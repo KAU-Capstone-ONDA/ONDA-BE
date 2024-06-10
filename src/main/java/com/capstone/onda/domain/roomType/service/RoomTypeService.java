@@ -50,11 +50,13 @@ public class RoomTypeService {
 
         RoomTypeCategory roomTypeName = request.getRoomTypeName();
         Integer totalRoom = request.getTotalRoom();
+        Integer people = request.getPeople();
 
         RoomType roomType = RoomType.builder()
-            .roomTypeCategory(roomTypeName)
-            .totalRoom(totalRoom)
-            .build();
+                .roomTypeCategory(roomTypeName)
+                .totalRoom(totalRoom)
+                .people(people)
+                .build();
 
         List<FacilityOption> facilityOptions = request.getFacilityOptions();
         List<AttractionOption> attractionOptions = request.getAttractionOptions();
