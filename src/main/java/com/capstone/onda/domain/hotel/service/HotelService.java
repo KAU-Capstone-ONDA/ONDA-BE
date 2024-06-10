@@ -33,7 +33,7 @@ public class HotelService {
     private final RoomTypeRepository roomTypeRepository;
     private final MemberService memberService;
 
-    public List<HotelResponse> getHotel(String hotelName) {
+    public List<HotelResponse> findAllHotel(String hotelName) {
         if (hotelName.isBlank()) {
             throw new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION);
         }
@@ -46,6 +46,16 @@ public class HotelService {
         }
 
         return hotels.stream().map(HotelMapper::toHotelResponse).collect(Collectors.toList());
+    }
+
+    public HotelResponse findHotel(SecurityUser securityUser, Long hotelId){
+
+        Member member = memberService.validateMember(securityUser);
+
+        Hotel hotel = hotelRepository.findById(hotelId)
+            .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
+
+        return HotelMapper.toHotelResponse(hotel);
     }
 
     @Transactional

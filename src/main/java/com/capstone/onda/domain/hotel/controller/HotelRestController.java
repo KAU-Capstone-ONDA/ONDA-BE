@@ -29,10 +29,10 @@ public class HotelRestController {
 
     private final HotelService hotelService;
 
-    @GetMapping("/hotel")
+    @GetMapping(value = "/hotel")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<HotelResponse>> getAllHotels(@RequestParam String name) {
-        return ResponseDTO.res(hotelService.getHotel(name), "호텔 검색에 성공했습니다.");
+        return ResponseDTO.res(hotelService.findAllHotel(name), "호텔 검색에 성공했습니다.");
     }
 
     @PostMapping("/competing-hotel")
@@ -48,6 +48,13 @@ public class HotelRestController {
     public ResponseDTO<List<HotelResponse>> getCompetingHotel() {
         return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUser()),
             "경쟁 호텔 조회에 성공했습니다.");
+    }
+
+    @GetMapping("/hotel/{hotelId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO<HotelResponse> getHotelInfo(@PathVariable Long hotelId) {
+        return ResponseDTO.res(hotelService.findHotel(SecurityUtil.getUser(), hotelId),
+            "호텔 검색에 성공했습니다.");
     }
 
     @PostMapping("/competing-room-type/{roomTypeId}")
