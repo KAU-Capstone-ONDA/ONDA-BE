@@ -7,6 +7,9 @@ import lombok.Data;
 public class CompetingRoomTypeRequest {
 
     @NotNull(message = "객실타입 Id를 입력하세요.")
+    private Long roomTypeId;
+
+    @NotNull(message = "경쟁 객실타입 Id를 입력하세요.")
     private Long competingRoomTypeId;
 
 }

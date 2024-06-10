@@ -91,11 +91,11 @@ public class HotelService {
 
     @Transactional
     public List<RoomTypeResponse> registerCompetingRoomType(SecurityUser securityUser,
-        Long roomTypeId, CompetingRoomTypeRequest competingRoomTypeRequest) {
+        CompetingRoomTypeRequest competingRoomTypeRequest) {
 
         Member member = memberService.validateMember(securityUser);
 
-        RoomType roomType = roomTypeRepository.findById(roomTypeId)
+        RoomType roomType = roomTypeRepository.findById(competingRoomTypeRequest.getRoomTypeId())
             .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
 
         // 내 호텔에 속한 객실 타입인지 검증하는 구문
@@ -110,7 +110,7 @@ public class HotelService {
         roomType.addCompetingRoomType(competingRoomType);
 
         return roomType.getCompetingRoomType().stream().map(
-            (tmpRoomType) -> RoomTypeMapper.toRoomTypeResponse(member.getHotel().getId(),
+            (tmpRoomType) -> RoomTypeMapper.toRoomTypeResponse(tmpRoomType.getHotel().getId(),
                 tmpRoomType)).collect(Collectors.toList());
     }
 
@@ -128,9 +128,9 @@ public class HotelService {
         }
 
         return roomType.getCompetingRoomType().stream().map(
-            (competingRoomType) -> RoomTypeMapper.toRoomTypeResponse(member.getHotel().getId(),
-                competingRoomType)).collect(
-            Collectors.toList());
+                (competingRoomType) -> RoomTypeMapper.toRoomTypeResponse(
+                    competingRoomType.getHotel().getId(), competingRoomType))
+            .collect(Collectors.toList());
     }
 
 }

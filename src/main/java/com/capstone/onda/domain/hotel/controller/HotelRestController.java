@@ -58,12 +58,12 @@ public class HotelRestController {
             "호텔 검색에 성공했습니다.");
     }
 
-    @PostMapping("/competing-room-type/{roomTypeId}")
+    @PostMapping("/competing-room-type")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<RoomTypeResponse>> postCompetingRoomType(@PathVariable Long roomTypeId,
+    public ResponseDTO<List<RoomTypeResponse>> postCompetingRoomType(
         @RequestBody @Valid CompetingRoomTypeRequest request) {
         return ResponseDTO.res(
-            hotelService.registerCompetingRoomType(SecurityUtil.getUser(), roomTypeId, request),
+            hotelService.registerCompetingRoomType(SecurityUtil.getUser(), request),
             "경쟁 객실 타입 등록에 성공했습니다.");
     }
 
