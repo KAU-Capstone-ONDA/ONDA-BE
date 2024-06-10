@@ -4,7 +4,7 @@ package com.capstone.onda.domain.roomType.enumeration.facility;
 import com.capstone.onda.domain.roomType.EnumManager;
 import lombok.Getter;
 
-import java.util.Arrays;
+
 
 @Getter
 public enum FacilityOption implements EnumManager {
@@ -47,10 +47,12 @@ public enum FacilityOption implements EnumManager {
     }
 
     public static FacilityOption fromCode(String dbData) {
-        return Arrays.stream(FacilityOption.values())
-                .filter(v -> v.getViewName().equals(dbData))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("시설 옵션에 %s가 존재하지 않습니다.", dbData)));
+        for (FacilityOption option : FacilityOption.values()) {
+            if (option.viewName.equals(dbData)) {
+                return option;
+            }
+        }
+        throw new IllegalArgumentException(String.format("시설 옵션에 %s가 존재하지 않습니다.", dbData));
     }
 
 

@@ -4,9 +4,10 @@ package com.capstone.onda.domain.roomType.enumeration.amenity;
 
 
 import com.capstone.onda.domain.roomType.EnumManager;
+
 import lombok.Getter;
 
-import java.util.Arrays;
+
 
 @Getter
 public enum AmenityOption implements EnumManager {
@@ -51,10 +52,12 @@ public enum AmenityOption implements EnumManager {
     }
 
     public static AmenityOption fromCode(String dbData) {
-        return Arrays.stream(AmenityOption.values())
-                .filter(v -> v.getViewName().equals(dbData))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("어메니티 옵션에 %s가 존재하지 않습니다.", dbData)));
+        for (AmenityOption option : AmenityOption.values()) {
+            if (option.viewName.equals(dbData)) {
+                return option;
+            }
+        }
+        throw new IllegalArgumentException(String.format("어메니티 옵션에 %s가 존재하지 않습니다.", dbData));
     }
 
 

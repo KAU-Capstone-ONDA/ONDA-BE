@@ -4,7 +4,7 @@ package com.capstone.onda.domain.roomType.enumeration.attraction;
 import com.capstone.onda.domain.roomType.EnumManager;
 import lombok.Getter;
 
-import java.util.Arrays;
+
 
 @Getter
 public enum AttractionOption implements EnumManager {
@@ -24,10 +24,12 @@ public enum AttractionOption implements EnumManager {
     private final String viewName;
 
     public static AttractionOption fromCode(String dbData) {
-        return Arrays.stream(AttractionOption.values())
-                .filter(v -> v.getViewName().equals(dbData))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("어트랙션 옵션에 %s가 존재하지 않습니다.", dbData)));
+        for (AttractionOption option : AttractionOption.values()) {
+            if (option.viewName.equals(dbData)) {
+                return option;
+            }
+        }
+        throw new IllegalArgumentException(String.format("어트랙션 옵션에 %s가 존재하지 않습니다.", dbData));
     }
 
     @Override
