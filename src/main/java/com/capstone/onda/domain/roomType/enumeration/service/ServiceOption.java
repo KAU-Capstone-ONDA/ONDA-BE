@@ -4,7 +4,7 @@ package com.capstone.onda.domain.roomType.enumeration.service;
 import com.capstone.onda.domain.roomType.EnumManager;
 import lombok.Getter;
 
-import java.util.Arrays;
+
 
 @Getter
 public enum ServiceOption implements EnumManager {
@@ -43,10 +43,12 @@ public enum ServiceOption implements EnumManager {
         this.viewName = viewName;
     }
     public static ServiceOption fromCode(String dbData) {
-        return Arrays.stream(ServiceOption.values())
-                .filter(v -> v.getViewName().equals(dbData))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("서비스 옵션에 %s가 존재하지 않습니다.", dbData)));
+        for (ServiceOption option : ServiceOption.values()) {
+            if (option.viewName.equals(dbData)) {
+                return option;
+            }
+        }
+        throw new IllegalArgumentException(String.format("서비스 옵션에 %s가 존재하지 않습니다.", dbData));
     }
 
 

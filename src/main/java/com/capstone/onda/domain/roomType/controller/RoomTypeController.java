@@ -3,6 +3,7 @@ package com.capstone.onda.domain.roomType.controller;
 
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeEdit;
 import com.capstone.onda.domain.roomType.dto.request.RoomTypeRequest;
+import com.capstone.onda.domain.roomType.dto.response.RoomTypeEditResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeListResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypePostResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
@@ -61,9 +62,8 @@ public class RoomTypeController {
     @PatchMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 수정 API")
-    public ResponseDTO<String> editRoomType(@PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
-        roomTypeService.editRoomType(SecurityUtil.getUser(), roomTypeId, request);
-        return ResponseDTO.res("객실타입 수정에 성공했습니다.");
+    public ResponseDTO<RoomTypeEditResponse> editRoomType(@PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
+        return ResponseDTO.res(roomTypeService.editRoomType(SecurityUtil.getUser(), roomTypeId, request), "객실타입 수정에 성공했습니다.");
     }
 
     @PostMapping("/room-types/{roomTypeId}/delete")
