@@ -1,5 +1,6 @@
 package com.capstone.onda.domain.hotel.util;
 
+import com.capstone.onda.domain.hotel.dto.response.HotelOnlyResponse;
 import com.capstone.onda.domain.hotel.dto.response.HotelResponse;
 import com.capstone.onda.domain.hotel.entity.Hotel;
 import com.capstone.onda.domain.member.dto.request.MemberSignUpRequest;
@@ -30,6 +31,16 @@ public class HotelMapper {
             .roomTypeLists(hotel.getRoomTypes().stream()
                 .map((roomType) -> RoomTypeMapper.toRoomTypeResponse(hotel.getId(), roomType))
                 .collect(Collectors.toList()))
+            .build();
+    }
+
+    public static HotelOnlyResponse toHotelOnlyResponse(Hotel hotel) {
+        return HotelOnlyResponse.builder()
+            .id(hotel.getId())
+            .hotelName(hotel.getHotelName())
+            .region(hotel.getRegion())
+            .city(hotel.getCity())
+            .star(hotel.getStar())
             .build();
     }
 
