@@ -43,6 +43,9 @@ public class RoomType {
     @Comment("전체 객실 수")
     private Integer totalRoom;
 
+    @Comment("투숙 인원수")
+    private Integer people;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
@@ -64,9 +67,10 @@ public class RoomType {
 
 
     @Builder
-    public RoomType(Integer totalRoom, RoomTypeCategory roomTypeCategory) {
+    public RoomType(Integer totalRoom, RoomTypeCategory roomTypeCategory, Integer people) {
         this.totalRoom = totalRoom;
         this.roomTypeCategory = roomTypeCategory;
+        this.people = people;
         this.facilityOptions = new ArrayList<>();
         this.attractionOptions = new ArrayList<>();
         this.serviceOptions = new ArrayList<>();

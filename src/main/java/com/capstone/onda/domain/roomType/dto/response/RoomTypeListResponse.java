@@ -19,6 +19,7 @@ public class RoomTypeListResponse {
     private Long roomTypeId;
     private RoomTypeCategory roomTypeName;
     private Integer totalRoom;
+    private Integer people;
 
     private List<FacilityOption> facilityOptions = new ArrayList<>();
 
@@ -33,6 +34,7 @@ public class RoomTypeListResponse {
         this.roomTypeId = roomType.getId();
         this.roomTypeName = roomType.getRoomTypeCategory();
         this.totalRoom = roomType.getTotalRoom();
+        this.people = roomType.getPeople();
     }
 
 }

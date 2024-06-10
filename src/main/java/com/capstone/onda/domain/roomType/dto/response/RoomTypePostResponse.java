@@ -13,6 +13,7 @@ public record RoomTypePostResponse(
     Long roomTypeId,
     RoomTypeCategory roomTypeName,
     Integer totalRoom,
+    Integer people,
     List<FacilityOption> facilityOptions,
     List<AttractionOption> attractionOptions,
     List<ServiceOption> serviceOptions,
@@ -22,13 +23,14 @@ public record RoomTypePostResponse(
 
     @Builder
     public RoomTypePostResponse(Long hotelId, Long roomTypeId, RoomTypeCategory roomTypeName,
-        Integer totalRoom, List<FacilityOption> facilityOptions,
+        Integer totalRoom, Integer people, List<FacilityOption> facilityOptions,
         List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions,
         List<AmenityOption> amenityOptions) {
         this.hotelId = hotelId;
         this.roomTypeId = roomTypeId;
         this.roomTypeName = roomTypeName;
         this.totalRoom = totalRoom;
+        this.people = people;
         this.facilityOptions = facilityOptions;
         this.attractionOptions = attractionOptions;
         this.serviceOptions = serviceOptions;

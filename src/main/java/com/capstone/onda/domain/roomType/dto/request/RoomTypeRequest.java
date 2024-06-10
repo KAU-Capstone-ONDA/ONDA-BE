@@ -22,6 +22,7 @@ public class RoomTypeRequest {
 
     private Integer totalRoom;
 
+    private  Integer people;
 
     private List<FacilityOption> facilityOptions = new ArrayList<>();
 
@@ -34,9 +35,10 @@ public class RoomTypeRequest {
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
     @Builder
-    public RoomTypeRequest(RoomTypeCategory roomTypeName, Integer totalRoom, List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions, List<AmenityGroup> amenityGroups, List<AmenityOption> amenityOptions) {
+    public RoomTypeRequest(RoomTypeCategory roomTypeName, Integer totalRoom, Integer people, List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions, List<AmenityGroup> amenityGroups, List<AmenityOption> amenityOptions) {
         this.roomTypeName = roomTypeName;
         this.totalRoom = totalRoom;
+        this.people = people;
         this.facilityOptions = facilityOptions;
         this.attractionOptions = attractionOptions;
         this.serviceOptions = serviceOptions;
