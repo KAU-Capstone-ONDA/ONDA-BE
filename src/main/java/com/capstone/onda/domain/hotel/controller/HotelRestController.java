@@ -2,6 +2,7 @@ package com.capstone.onda.domain.hotel.controller;
 
 import com.capstone.onda.domain.hotel.dto.request.CompetingHotelRequest;
 import com.capstone.onda.domain.hotel.dto.request.CompetingRoomTypeRequest;
+import com.capstone.onda.domain.hotel.dto.response.HotelOnlyResponse;
 import com.capstone.onda.domain.hotel.dto.response.HotelResponse;
 import com.capstone.onda.domain.hotel.service.HotelService;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
@@ -45,7 +46,7 @@ public class HotelRestController {
 
     @GetMapping("/competing-hotel")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<HotelResponse>> getCompetingHotel() {
+    public ResponseDTO<List<HotelOnlyResponse>> getCompetingHotel() {
         return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUser()),
             "경쟁 호텔 조회에 성공했습니다.");
     }
