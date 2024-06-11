@@ -33,7 +33,10 @@ public class HotelService {
     private final RoomTypeRepository roomTypeRepository;
     private final MemberService memberService;
 
-    public List<HotelResponse> findAllHotel(String hotelName) {
+    public List<HotelResponse> findAllHotel(String userEmail, String hotelName) {
+
+        Member member = memberService.validateMember(userEmail);
+
         if (hotelName.isBlank()) {
             throw new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION);
         }

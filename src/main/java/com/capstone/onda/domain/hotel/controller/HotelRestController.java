@@ -8,7 +8,6 @@ import com.capstone.onda.domain.hotel.service.HotelService;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.global.common.ResponseDTO;
 import com.capstone.onda.global.security.dto.CustomOAuth2User;
-import com.capstone.onda.global.security.util.SecurityUtil;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +33,15 @@ public class HotelRestController {
 
     @GetMapping(value = "/hotel")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<HotelResponse>> getAllHotels(@RequestParam String name) {
-        return ResponseDTO.res(hotelService.findAllHotel(name), "호텔 검색에 성공했습니다.");
+    public ResponseDTO<List<HotelResponse>> getAllHotels(@RequestParam String name,
+        @AuthenticationPrincipal CustomOAuth2User user) {
+        return ResponseDTO.res(hotelService.findAllHotel(user.getEmail(), name), "호텔 검색에 성공했습니다.");
     }
 
     @PostMapping("/competing-hotel")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<HotelResponse>> postCompetingHotel(@AuthenticationPrincipal CustomOAuth2User user,
+    public ResponseDTO<List<HotelResponse>> postCompetingHotel(
+        @AuthenticationPrincipal CustomOAuth2User user,
         @RequestBody @Valid CompetingHotelRequest request) {
         log.info(user.getEmail());
         return ResponseDTO.res(hotelService.registerCompetingHotel(user.getEmail(), request),
@@ -49,14 +50,16 @@ public class HotelRestController {
 
     @GetMapping("/competing-hotel")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<HotelOnlyResponse>> getCompetingHotel() {
-        return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUserEmail()),
+    public ResponseDTO<List<HotelOnlyResponse>> getCompetingHotel(
+        @AuthenticationPrincipal CustomOAuth2User user) {
+        return ResponseDTO.res(hotelService.findAllCompetingHotel(user.getEmail()),
             "경쟁 호텔 조회에 성공했습니다.");
     }
 
     @GetMapping("/hotel/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<HotelResponse> getHotelInfo(@AuthenticationPrincipal CustomOAuth2User user, @PathVariable Long hotelId) {
+    public ResponseDTO<HotelResponse> getHotelInfo(@AuthenticationPrincipal CustomOAuth2User user,
+        @PathVariable Long hotelId) {
         return ResponseDTO.res(hotelService.findHotel(user.getEmail(), hotelId),
             "호텔 검색에 성공했습니다.");
     }
@@ -64,17 +67,19 @@ public class HotelRestController {
     @PostMapping("/competing-room-type")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<RoomTypeResponse>> postCompetingRoomType(
-        @RequestBody @Valid CompetingRoomTypeRequest request) {
+        @RequestBody @Valid CompetingRoomTypeRequest request,
+        @AuthenticationPrincipal CustomOAuth2User user) {
         return ResponseDTO.res(
-            hotelService.registerCompetingRoomType(SecurityUtil.getUserEmail(), request),
+            hotelService.registerCompetingRoomType(user.getEmail(), request),
             "경쟁 객실 타입 등록에 성공했습니다.");
     }
 
     @GetMapping("/competing-room-type/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<RoomTypeResponse>> getCompetingRoomType(@PathVariable Long roomTypeId) {
+    public ResponseDTO<List<RoomTypeResponse>> getCompetingRoomType(@PathVariable Long roomTypeId,
+        @AuthenticationPrincipal CustomOAuth2User user) {
         return ResponseDTO.res(
-            hotelService.findAllCompetingRoomType(SecurityUtil.getUserEmail(), roomTypeId),
+            hotelService.findAllCompetingRoomType(user.getEmail(), roomTypeId),
             "경쟁 객실 타입 조회에 성공했습니다.");
     }
 
