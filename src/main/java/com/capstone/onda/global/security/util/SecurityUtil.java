@@ -6,8 +6,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public abstract class SecurityUtil {
 
     public static String getUserEmail() {
-        return ((SecurityUser) (SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal())).email();
+        SecurityUser securityUser = (SecurityUser) (SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getPrincipal());
+        String email = securityUser.email();
+        return email;
     }
 
     public static SecurityUser getUser() {

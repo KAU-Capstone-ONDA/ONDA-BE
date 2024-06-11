@@ -16,7 +16,6 @@ import com.capstone.onda.domain.roomType.exception.RoomTypeNotFound;
 import com.capstone.onda.domain.roomType.repository.RoomTypeRepository;
 import com.capstone.onda.domain.roomType.util.RoomTypeMapper;
 import com.capstone.onda.global.exception.ErrorCode;
-import com.capstone.onda.global.security.dto.SecurityUser;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
@@ -49,9 +48,9 @@ public class HotelService {
         return hotels.stream().map(HotelMapper::toHotelResponse).collect(Collectors.toList());
     }
 
-    public HotelResponse findHotel(SecurityUser securityUser, Long hotelId) {
+    public HotelResponse findHotel(String userEmail, Long hotelId) {
 
-        Member member = memberService.validateMember(securityUser);
+        Member member = memberService.validateMember(userEmail);
 
         Hotel hotel = hotelRepository.findById(hotelId)
             .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
@@ -60,10 +59,10 @@ public class HotelService {
     }
 
     @Transactional
-    public List<HotelResponse> registerCompetingHotel(SecurityUser securityUser,
+    public List<HotelResponse> registerCompetingHotel(String userEmail,
         CompetingHotelRequest competingHotelRequestDTO) {
 
-        Member member = memberService.validateMember(securityUser);
+        Member member = memberService.validateMember(userEmail);
 
         Hotel hotel = hotelRepository.findById(member.getHotel().getId())
             .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
@@ -78,9 +77,9 @@ public class HotelService {
             .collect(Collectors.toList());
     }
 
-    public List<HotelOnlyResponse> findAllCompetingHotel(SecurityUser securityUser) {
+    public List<HotelOnlyResponse> findAllCompetingHotel(String userEmail) {
 
-        Member member = memberService.validateMember(securityUser);
+        Member member = memberService.validateMember(userEmail);
 
         Hotel hotel = hotelRepository.findById(member.getHotel().getId())
             .orElseThrow(() -> new HotelNotFound(ErrorCode.INVALID_HOTEL_EXCEPTION));
@@ -90,10 +89,10 @@ public class HotelService {
     }
 
     @Transactional
-    public List<RoomTypeResponse> registerCompetingRoomType(SecurityUser securityUser,
+    public List<RoomTypeResponse> registerCompetingRoomType(String userEmail,
         CompetingRoomTypeRequest competingRoomTypeRequest) {
 
-        Member member = memberService.validateMember(securityUser);
+        Member member = memberService.validateMember(userEmail);
 
         RoomType roomType = roomTypeRepository.findById(competingRoomTypeRequest.getRoomTypeId())
             .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
@@ -114,10 +113,10 @@ public class HotelService {
                 tmpRoomType)).collect(Collectors.toList());
     }
 
-    public List<RoomTypeResponse> findAllCompetingRoomType(SecurityUser securityUser,
+    public List<RoomTypeResponse> findAllCompetingRoomType(String userEmail,
         Long roomTypeId) {
 
-        Member member = memberService.validateMember(securityUser);
+        Member member = memberService.validateMember(userEmail);
 
         RoomType roomType = roomTypeRepository.findById(roomTypeId)
             .orElseThrow(() -> new RoomTypeNotFound(ErrorCode.INVALID_ROOMTYPE_EXCEPTION));
