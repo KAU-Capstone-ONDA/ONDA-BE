@@ -4,6 +4,7 @@ import com.capstone.onda.domain.member.entity.Member;
 import com.capstone.onda.domain.member.exception.InvalidMemberException;
 import com.capstone.onda.domain.member.repository.MemberRepository;
 import com.capstone.onda.global.exception.ErrorCode;
+import com.capstone.onda.global.security.dto.CustomOAuth2User;
 import com.capstone.onda.global.security.dto.SecurityUser;
 import com.capstone.onda.global.security.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -29,7 +30,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().contains("token/") || request.getRequestURI().contains("/signup");
+        return request.getRequestURI().contains("token/") || request.getRequestURI()
+            .contains("/signup");
     }
 
     @Override
@@ -53,10 +55,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .email(findMember.getUserEmail())
                 .role(findMember.getUserRole().toString())
                 .nickname(findMember.getUserNickName())
+                .providerType(findMember.getProviderType().toString())
+                .role(findMember.getUserRole().toString())
                 .build();
 
+            CustomOAuth2User customOAuth2User = new CustomOAuth2User(securityUser);
+
             //5. SecurityContext에 인증 객체 등록
-            Authentication authentication = jwtUtil.getAuthentication(securityUser);
+            Authentication authentication = jwtUtil.getAuthentication(customOAuth2User);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             throw new JwtException(ErrorCode.EXPIRED_TOKEN.getSimpleMessage());

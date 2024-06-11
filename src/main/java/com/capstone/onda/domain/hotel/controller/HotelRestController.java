@@ -7,12 +7,14 @@ import com.capstone.onda.domain.hotel.dto.response.HotelResponse;
 import com.capstone.onda.domain.hotel.service.HotelService;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.global.common.ResponseDTO;
+import com.capstone.onda.global.security.dto.CustomOAuth2User;
 import com.capstone.onda.global.security.util.SecurityUtil;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,9 +40,10 @@ public class HotelRestController {
 
     @PostMapping("/competing-hotel")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<List<HotelResponse>> postCompetingHotel(
+    public ResponseDTO<List<HotelResponse>> postCompetingHotel(@AuthenticationPrincipal CustomOAuth2User user,
         @RequestBody @Valid CompetingHotelRequest request) {
-        return ResponseDTO.res(hotelService.registerCompetingHotel(SecurityUtil.getUserEmail(), request),
+        log.info(user.getEmail());
+        return ResponseDTO.res(hotelService.registerCompetingHotel(user.getEmail(), request),
             "경쟁 호텔 등록에 성공했습니다.");
     }
 
@@ -53,8 +56,8 @@ public class HotelRestController {
 
     @GetMapping("/hotel/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO<HotelResponse> getHotelInfo(@PathVariable Long hotelId) {
-        return ResponseDTO.res(hotelService.findHotel(SecurityUtil.getUserEmail(), hotelId),
+    public ResponseDTO<HotelResponse> getHotelInfo(@AuthenticationPrincipal CustomOAuth2User user, @PathVariable Long hotelId) {
+        return ResponseDTO.res(hotelService.findHotel(user.getEmail(), hotelId),
             "호텔 검색에 성공했습니다.");
     }
 

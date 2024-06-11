@@ -2,16 +2,15 @@ package com.capstone.onda.global.security.service;
 
 import com.capstone.onda.domain.member.entity.Member;
 import com.capstone.onda.domain.member.repository.MemberRepository;
-import java.util.Collections;
+import com.capstone.onda.global.security.dto.CustomOAuth2User;
+import com.capstone.onda.global.security.dto.SecurityUser;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -48,22 +47,21 @@ public class OAuthService extends DefaultOAuth2UserService {
         Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
 
         String email = (String) memberAttribute.get("email");
+        String nickname = (String) memberAttribute.get("nickname");
+        String provider = (String) memberAttribute.get("provider");
 
         Optional<Member> findMember = memberRepository.findByUserEmail(email);
+        SecurityUser securityUser = null;
 
         if (findMember.isEmpty()) {
-            memberAttribute.put("exist", false);
-            return new DefaultOAuth2User(
-                Collections.singleton(
-                    new SimpleGrantedAuthority("ROLE_USER")),
-                memberAttribute, "email");
+            securityUser = new SecurityUser(email, nickname, "ROLE_USER", provider, false);
+
         } else {
             memberAttribute.put("exist", true);
-            return new DefaultOAuth2User(
-                Collections.singleton(
-                    new SimpleGrantedAuthority(findMember.get().getUserRole().toString())),
-                memberAttribute, "email");
+            securityUser = new SecurityUser(email, nickname, "ROLE_USER", provider, true);
         }
+
+        return new CustomOAuth2User(securityUser);
     }
 
     // v1 회원 가입 로직

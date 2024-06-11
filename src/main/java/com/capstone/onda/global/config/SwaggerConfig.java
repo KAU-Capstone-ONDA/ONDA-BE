@@ -1,17 +1,15 @@
 package com.capstone.onda.global.config;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@SecurityScheme(
-    type = SecuritySchemeType.APIKEY, in = SecuritySchemeIn.HEADER,
-    name = "Authorization", description = "Auth Token"
-)
 @Configuration
 public class SwaggerConfig {
 
@@ -22,7 +20,17 @@ public class SwaggerConfig {
             .title("[Capston] ONDA")
             .description("[Capston] ONDA Swagger 명세서 입니다");
 
+        String jwtSchemeName = "Authorization";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        Components components = new Components()
+            .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
+                .name(jwtSchemeName)
+                .type(Type.APIKEY)
+                .in(In.HEADER));
+
         return new OpenAPI()
-            .info(info);
+            .info(info)
+            .addSecurityItem(securityRequirement)
+            .components(components);
     }
 }

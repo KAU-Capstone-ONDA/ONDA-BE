@@ -1,5 +1,6 @@
 package com.capstone.onda.global.security.handler;
 
+import com.capstone.onda.global.security.dto.CustomOAuth2User;
 import com.capstone.onda.global.security.dto.GeneratedToken;
 import com.capstone.onda.global.security.util.JwtUtil;
 import jakarta.servlet.ServletException;
@@ -10,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,19 +29,19 @@ public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         Authentication authentication) throws IOException, ServletException {
 
         //1. oAuth2User로 캐스팅하여 인증된 사용자의 정보를 가져온다.
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
         //2. oAuth2User의 정보들을 가져온다.
-        String email = oAuth2User.getAttribute("email");
+        String email = customOAuth2User.getEmail();
 
-        String provider = oAuth2User.getAttribute("provider");
+        String provider = customOAuth2User.getProvider();
 
-        String nickname = oAuth2User.getAttribute("nickname");
+        String nickname = customOAuth2User.getName();
 
-        boolean isExist = oAuth2User.getAttribute("exist");
+        boolean isExist = customOAuth2User.getExist();
 
         //3. 로그인한 회원 존재의 여부를 가져온다.
-        String role = oAuth2User.getAuthorities().stream()
+        String role = authentication.getAuthorities().stream()
             .findFirst()
             .orElseThrow(IllegalAccessError::new)
             .getAuthority();

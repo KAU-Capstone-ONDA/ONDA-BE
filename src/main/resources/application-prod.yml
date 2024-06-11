@@ -56,3 +56,11 @@ jwt:
     expire-length: 600000
   refresh-token:
     expire-length: 7776000000
+
+kakao:
+  base-url: ${KAKAO_BASE_URL}
+  key: ${KAKAO_KEY}
+
+springdoc:
+  swagger-ui:
+    bearerToken=false:
