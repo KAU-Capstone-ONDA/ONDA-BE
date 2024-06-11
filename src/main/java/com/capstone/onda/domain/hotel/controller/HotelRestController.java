@@ -40,21 +40,21 @@ public class HotelRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<HotelResponse>> postCompetingHotel(
         @RequestBody @Valid CompetingHotelRequest request) {
-        return ResponseDTO.res(hotelService.registerCompetingHotel(SecurityUtil.getUser(), request),
+        return ResponseDTO.res(hotelService.registerCompetingHotel(SecurityUtil.getUserEmail(), request),
             "경쟁 호텔 등록에 성공했습니다.");
     }
 
     @GetMapping("/competing-hotel")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<HotelOnlyResponse>> getCompetingHotel() {
-        return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUser()),
+        return ResponseDTO.res(hotelService.findAllCompetingHotel(SecurityUtil.getUserEmail()),
             "경쟁 호텔 조회에 성공했습니다.");
     }
 
     @GetMapping("/hotel/{hotelId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<HotelResponse> getHotelInfo(@PathVariable Long hotelId) {
-        return ResponseDTO.res(hotelService.findHotel(SecurityUtil.getUser(), hotelId),
+        return ResponseDTO.res(hotelService.findHotel(SecurityUtil.getUserEmail(), hotelId),
             "호텔 검색에 성공했습니다.");
     }
 
@@ -63,7 +63,7 @@ public class HotelRestController {
     public ResponseDTO<List<RoomTypeResponse>> postCompetingRoomType(
         @RequestBody @Valid CompetingRoomTypeRequest request) {
         return ResponseDTO.res(
-            hotelService.registerCompetingRoomType(SecurityUtil.getUser(), request),
+            hotelService.registerCompetingRoomType(SecurityUtil.getUserEmail(), request),
             "경쟁 객실 타입 등록에 성공했습니다.");
     }
 
@@ -71,7 +71,7 @@ public class HotelRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO<List<RoomTypeResponse>> getCompetingRoomType(@PathVariable Long roomTypeId) {
         return ResponseDTO.res(
-            hotelService.findAllCompetingRoomType(SecurityUtil.getUser(), roomTypeId),
+            hotelService.findAllCompetingRoomType(SecurityUtil.getUserEmail(), roomTypeId),
             "경쟁 객실 타입 조회에 성공했습니다.");
     }
 

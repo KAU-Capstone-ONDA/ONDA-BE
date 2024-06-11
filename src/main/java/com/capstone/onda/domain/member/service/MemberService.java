@@ -15,7 +15,6 @@ import com.capstone.onda.domain.member.repository.MemberRepository;
 import com.capstone.onda.domain.member.util.MemberMapper;
 import com.capstone.onda.global.exception.ErrorCode;
 import com.capstone.onda.global.security.dto.RefreshToken;
-import com.capstone.onda.global.security.dto.SecurityUser;
 import jakarta.annotation.PostConstruct;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -109,8 +108,8 @@ public class MemberService {
         memberAuthRepository.save(new RefreshToken(email, accessToken, refreshToken));
     }
 
-    public Member validateMember(SecurityUser securityUser) {
-        return memberRepository.findByUserEmail(securityUser.email())
+    public Member validateMember(String userEmail) {
+        return memberRepository.findByUserEmail(userEmail)
             .orElseThrow(() -> new InvalidMemberException(ErrorCode.INVALID_MEMBER_EXCEPTION));
     }
 }
