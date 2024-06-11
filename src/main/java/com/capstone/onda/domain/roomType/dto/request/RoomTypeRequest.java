@@ -1,7 +1,6 @@
 package com.capstone.onda.domain.roomType.dto.request;
 
 
-import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityGroup;
 import com.capstone.onda.domain.roomType.enumeration.amenity.AmenityOption;
 import com.capstone.onda.domain.roomType.enumeration.attraction.AttractionOption;
 import com.capstone.onda.domain.roomType.enumeration.facility.FacilityOption;
@@ -29,19 +28,16 @@ public class RoomTypeRequest {
 
     private List<ServiceOption> serviceOptions = new ArrayList<>();
 
-    private List<AmenityGroup> amenityGroups = new ArrayList<>();
-
     private List<AmenityOption> amenityOptions = new ArrayList<>();
 
     @Builder
-    public RoomTypeRequest(RoomTypeCategory roomTypeName, Integer totalRoom, Integer people, List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions, List<AmenityGroup> amenityGroups, List<AmenityOption> amenityOptions) {
+    public RoomTypeRequest(RoomTypeCategory roomTypeName, Integer totalRoom, Integer people, List<FacilityOption> facilityOptions, List<AttractionOption> attractionOptions, List<ServiceOption> serviceOptions, List<AmenityOption> amenityOptions) {
         this.roomTypeName = roomTypeName;
         this.totalRoom = totalRoom;
         this.people = people;
         this.facilityOptions = facilityOptions;
         this.attractionOptions = attractionOptions;
         this.serviceOptions = serviceOptions;
-        this.amenityGroups = amenityGroups;
         this.amenityOptions = amenityOptions;
     }
 }
