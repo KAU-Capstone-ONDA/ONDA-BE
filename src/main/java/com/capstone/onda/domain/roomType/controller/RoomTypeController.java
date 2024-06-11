@@ -9,6 +9,7 @@ import com.capstone.onda.domain.roomType.dto.response.RoomTypePostResponse;
 import com.capstone.onda.domain.roomType.dto.response.RoomTypeResponse;
 import com.capstone.onda.domain.roomType.service.RoomTypeService;
 import com.capstone.onda.global.common.ResponseDTO;
+import com.capstone.onda.global.security.dto.CustomOAuth2User;
 import com.capstone.onda.global.security.util.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,37 +42,47 @@ public class RoomTypeController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 등록 API")
     public ResponseDTO<RoomTypePostResponse> postRoomType(
+        @AuthenticationPrincipal CustomOAuth2User user,
         @RequestBody @Valid RoomTypeRequest request) {
-        return ResponseDTO.res(roomTypeService.postRoomType(SecurityUtil.getUser(), request),
+        return ResponseDTO.res(roomTypeService.postRoomType(user.getEmail(), request),
             "객실타입 등록에 성공했습니다.");
     }
 
     @GetMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 단건 조회 API")
-    public ResponseDTO<RoomTypeResponse> getOneRoomType(@PathVariable Long roomTypeId) {
-        return ResponseDTO.res(roomTypeService.getOneRoomType(SecurityUtil.getUser(), roomTypeId), "객실타입 조회에 성공했습니다.");
+    public ResponseDTO<RoomTypeResponse> getOneRoomType(
+        @AuthenticationPrincipal CustomOAuth2User user, @PathVariable Long roomTypeId) {
+        return ResponseDTO.res(roomTypeService.getOneRoomType(user.getEmail(), roomTypeId),
+            "객실타입 조회에 성공했습니다.");
     }
 
     @GetMapping("/hotel/room-types")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 리스트 조회 API")
-    public ResponseDTO<List<RoomTypeListResponse>> getListRoomType() {
-        return ResponseDTO.res(roomTypeService.getListRoomType(SecurityUtil.getUser()), "객실타입 리스트 조회에 성공했습니다.");
+    public ResponseDTO<List<RoomTypeListResponse>> getListRoomType(
+        @AuthenticationPrincipal CustomOAuth2User user) {
+        return ResponseDTO.res(roomTypeService.getListRoomType(user.getEmail()),
+            "객실타입 리스트 조회에 성공했습니다.");
     }
 
     @PatchMapping("/room-types/{roomTypeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 수정 API")
-    public ResponseDTO<RoomTypeEditResponse> editRoomType(@PathVariable Long roomTypeId, @RequestBody @Valid RoomTypeEdit request) {
-        return ResponseDTO.res(roomTypeService.editRoomType(SecurityUtil.getUser(), roomTypeId, request), "객실타입 수정에 성공했습니다.");
+    public ResponseDTO<RoomTypeEditResponse> editRoomType(
+        @AuthenticationPrincipal CustomOAuth2User user, @PathVariable Long roomTypeId,
+        @RequestBody @Valid RoomTypeEdit request) {
+        return ResponseDTO.res(
+            roomTypeService.editRoomType(user.getEmail(), roomTypeId, request),
+            "객실타입 수정에 성공했습니다.");
     }
 
     @PostMapping("/room-types/{roomTypeId}/delete")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "객실타입 삭제 API")
-    public ResponseDTO<String> deleteRoomType(@PathVariable Long roomTypeId) {
-        roomTypeService.deleteRoomType(SecurityUtil.getUser(), roomTypeId);
+    public ResponseDTO<String> deleteRoomType(@AuthenticationPrincipal CustomOAuth2User user,
+        @PathVariable Long roomTypeId) {
+        roomTypeService.deleteRoomType(user.getEmail(), roomTypeId);
         return ResponseDTO.res("객실타입 삭제에 성공했습니다.");
     }
 
