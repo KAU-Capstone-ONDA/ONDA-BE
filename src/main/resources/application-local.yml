@@ -51,9 +51,9 @@ spring:
 
 jwt:
   access-token:
-    expire-length: 600000 #1000L * 60L * 10L
+    expire-length: 604800000
   refresh-token:
-    expire-length: 7776000000 #1000L * 60L * 60L * 24L * 30L * 3L
+    expire-length: 7776000000
 
 
 kakao:
