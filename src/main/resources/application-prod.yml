@@ -53,7 +53,7 @@ spring:
 
 jwt:
   access-token:
-    expire-length: 600000
+    expire-length: 604800000
   refresh-token:
     expire-length: 7776000000
 
